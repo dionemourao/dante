@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+
+// Determinar o diretório base
+$dir = getcwd();
+
+// Verificar se estamos em um projeto que usa o framework ou no próprio framework
+if (file_exists($dir . '/vendor/autoload.php')) {
+    require $dir . '/vendor/autoload.php';
+} elseif (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require __DIR__ . '/../vendor/autoload.php';
+} else {
+    die("Não foi possível encontrar o autoloader do Composer.\n");
+}
+
+// Carregar bootstrap se existir no projeto atual
+if (file_exists($dir . '/bootstrap.php')) {
+    require $dir . '/bootstrap.php';
+}
+
+// Inicializar a aplicação
+$app = new \LadyPHP\Foundation\Application();
+
+// Registrar comandos padrão
+$app->registerDefaultCommands();
+
+// Carregar comandos personalizados do projeto
+if (file_exists($dir . '/config/commands.php')) {
+    $commands = require $dir . '/config/commands.php';
+    foreach ($commands as $commandClass) {
+        $app->registerCommand(new $commandClass());
+    }
+}
+
+// Executar o comando
+exit($app->run($argv));

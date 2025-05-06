@@ -1,0 +1,33 @@
+{
+    "name": "lady-php/framework",
+    "description": "Um framework PHP leve com comandos CLI personalizados",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dione",
+            "email": "dionemourao@outlook.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LadyPHP\\": "framework/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LadyPHP\\Tests\\": "framework/tests/"
+        }
+    },
+    "bin": [
+        "framework/bin/lady"
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

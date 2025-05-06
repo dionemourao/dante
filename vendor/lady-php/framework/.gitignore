@@ -1,0 +1,38 @@
+# Composer
+/composer.phar
+/vendor/
+/composer.lock
+
+# PHPUnit
+/phpunit.xml
+/.phpunit.result.cache
+/coverage/
+
+# IDE & Editores
+/.idea/
+/.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+.DS_Store
+
+# Arquivos de ambiente
+/.env
+/.env.local
+/.env.*.local
+
+# Arquivos de cache e logs
+/var/
+/logs/
+*.log
+*.cache
+
+# Arquivos gerados
+/build/
+/dist/
+/node_modules/
+
+# Arquivos temporários
+/temp/
+/tmp/

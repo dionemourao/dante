@@ -1,0 +1,77 @@
+#!/usr/bin/env php
+<?php
+
+// Verificar se está sendo executado a partir da linha de comando
+if (PHP_SAPI !== 'cli') {
+    exit('O Lady CLI só pode ser executado a partir da linha de comando.');
+}
+
+// Determinar o diretório base da aplicação
+$basePath = realpath(__DIR__);
+
+// Definir caminhos possíveis para o autoloader
+$autoloadPaths = [
+    // Quando instalado via Composer
+    $basePath . '/vendor/autoload.php',
+    // Quando executado a partir do diretório raiz do projeto
+    __DIR__ . '/vendor/autoload.php',
+    // Quando executado a partir do diretório vendor/bin
+    dirname(__DIR__, 2) . '/autoload.php',
+];
+
+// Procurar e carregar o autoloader
+$autoloaderFound = false;
+foreach ($autoloadPaths as $autoloadPath) {
+    if (file_exists($autoloadPath)) {
+        require_once $autoloadPath;
+        $autoloaderFound = true;
+        break;
+    }
+}
+
+if (!$autoloaderFound) {
+    echo "Erro: Não foi possível encontrar o autoloader do Composer.\n";
+    echo "Certifique-se de que o Composer está instalado e execute 'composer install'.\n";
+    exit(1);
+}
+
+// Verificar se a classe Lady existe
+if (!class_exists('Lady\\Console\\Lady')) {
+    echo "Erro: A classe Lady\\Console\\Lady não foi encontrada.\n";
+    echo "Verifique se a estrutura de diretórios está correta e se o namespace está configurado adequadamente no composer.json.\n";
+    
+    // Mostrar a estrutura de diretórios atual para ajudar no diagnóstico
+    echo "\nEstrutura de diretórios atual:\n";
+    echo "Diretório base: " . $basePath . "\n";
+    
+    if (is_dir($basePath . '/src')) {
+        echo "Diretório src existe.\n";
+        if (is_dir($basePath . '/src/Console')) {
+            echo "Diretório src/Console existe.\n";
+            if (file_exists($basePath . '/src/Console/Lady.php')) {
+                echo "Arquivo src/Console/Lady.php existe.\n";
+                echo "Conteúdo do arquivo Lady.php:\n";
+                echo "--------------------------------\n";
+                echo file_get_contents($basePath . '/src/Console/Lady.php');
+                echo "--------------------------------\n";
+            } else {
+                echo "Arquivo src/Console/Lady.php NÃO existe.\n";
+            }
+        } else {
+            echo "Diretório src/Console NÃO existe.\n";
+        }
+    } else {
+        echo "Diretório src NÃO existe.\n";
+    }
+    
+    exit(1);
+}
+
+// Inicializar o Lady CLI
+try {
+    $lady = new Lady\Console\Lady();
+    exit($lady->run($argv));
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage() . "\n";
+    exit(1);
+}
